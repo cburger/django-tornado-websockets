@@ -15,7 +15,7 @@ Clone this repo and run installation with ``pip`` or ``setup.py install``:
 
 .. code-block:: bash
 
-    $ git clone https://github.com/Kocal/django-tornado-websockets.git
+    $ git clone --recursive https://github.com/Kocal/django-tornado-websockets.git
     $ cd django-tornado-websockets
     # Installation with pip
     $ pip install -e .
