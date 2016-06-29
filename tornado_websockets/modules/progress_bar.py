@@ -8,7 +8,7 @@ class ProgressBar(Module):
         If ``min`` and ``max`` values are equal, this progress bar has its indeterminate state
         set to ``True``.
 
-        :param websocket: Instance of ``tornado_websockets.websocket.WebSocket``
+        :param websocket: Instance of :class:`~tornado_websockets.websocket.WebSocket`
         :param min: Minimum value
         :param max: Maximum value
         :type websocket: tornado_websockets.websocket.WebSocket
