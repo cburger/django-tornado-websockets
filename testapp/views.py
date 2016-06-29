@@ -80,7 +80,7 @@ class MyChat(TemplateView):
 
 
 # WebSocket module progress bar
-ws_pb = ProgressBar('/my_progress_bar', max=100)
+ws_pb = ProgressBar(WebSocket('/my_progress_bar'), max=100)
 
 
 class MyProgressBar(TemplateView):
@@ -104,8 +104,8 @@ def start_thread(ws_pb):
 for i in range(0, 30):
     args = [i] * 10
     cc = '''
-ws_pbs{} = ProgressBar('my_progress_bar/{}', min=25, max=50)
-#ws_pbs{} = ProgressBar('my_progress_bar/{}', max=i%%2 * 50)
+ws_pbs{} = ProgressBar(WebSocket('my_progress_bar/{}'), min=25, max=50)
+#ws_pbs{} = ProgressBar(WebSocket('my_progress_bar/{}'), max=i%%2 * 50)
 
 @ws_pbs{}.on
 def start():

@@ -1,5 +1,8 @@
 from tornado_websockets.modules.progress_bar import ProgressBar
+from tornado_websockets.websocket import WebSocket
 
-module_progress_bar_test = ProgressBar('my_progress_bar', False)
+ws_pb = WebSocket('my_progress_bar', False)
+app_progress_bar_test = ProgressBar(ws_pb)
 
-module_progress_bar_indeterminate_test = ProgressBar('my_indeterminate_progress_bar', min=0, max=0)
+ws_ipb = WebSocket('my_indeterminate_progress_bar', False)
+app_progress_bar_indeterminate_test = ProgressBar(ws_ipb, min=0, max=0)

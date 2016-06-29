@@ -19,7 +19,7 @@ setup(
         'tornado>=4.3',
         'six>=1.10',
     ],
-    packages = find_packages(exclude=['node_modules', 'bower_components', '.idea']),
+    packages=find_packages(exclude=['node_modules', 'bower_components', '.idea']),
     include_package_data=True,
     license='GPLv3 License',
     classifiers=[

@@ -1,22 +1,23 @@
-from tornado_websockets.websocket import WebSocket
+from tornado_websockets.modules.module import Module
 
 
-class ProgressBar(object):
+class ProgressBar(Module):
     """
         Initialize a new ProgressBar module instance.
 
         If ``min`` and ``max`` values are equal, this progress bar has its indeterminate state
         set to ``True``.
 
-        :param path: WebSocket path, see ``tornado_websockets.websocket.WebSocket``
-        :param min: Minimum _value
-        :param max: Maximum _value
-        :type path: str
+        :param websocket: Instance of :class:`~tornado_websockets.websocket.WebSocket`
+        :param min: Minimum value
+        :param max: Maximum value
+        :type websocket: tornado_websockets.websocket.WebSocket
         :type min: int
         :type max: int
     """
 
-    def __init__(self, path, min=0, max=100, add_to_handlers=True):
+    def __init__(self, websocket, min=0, max=100):
+        super(ProgressBar, self).__init__(websocket, 'module_progressbar_')
 
         if max < min:
             raise ValueError('`max` value (%d) can not be lower than `min` value (%d).' % (max, min))
@@ -25,11 +26,12 @@ class ProgressBar(object):
         self.max = max
         self._value = min
         self.indeterminate = min is max
+        self.initialize()
 
-        self.path = path.strip()
-        self.path = self.path if self.path.startswith('/') else '/' + self.path
-        self.websocket = WebSocket('/module/progress_bar' + self.path, add_to_handlers)
-        self.bind_default_events()
+    def initialize(self):
+        @self.websocket.on
+        def open():
+            self.emit_init()
 
     def reset(self):
         """
@@ -78,28 +80,6 @@ class ProgressBar(object):
 
         return False
 
-    def bind_default_events(self):
-        """
-            Bind default events for WebSocket instance.
-
-            Actually, it only binds ``open`` event.
-        """
-
-        @self.websocket.on
-        def open():
-            self.emit_init()
-
-    def on(self, callback):
-        """
-            Shortcut for :meth:`tornado_websockets.websocket.WebSocket.on` decorator.
-
-            :param callback: Function or a class method.
-            :type callback: Callable
-            :return: ``callback`` parameter.
-        """
-
-        return self.websocket.on(callback)
-
     def emit_init(self):
         """
             Emit ``before_init``, ``init`` and ``after_init`` events to initialize a client-side progress bar.
@@ -116,9 +96,9 @@ class ProgressBar(object):
                 'value': int(self._value),
             })
 
-        self.websocket.emit('before_init')
-        self.websocket.emit('init', data)
-        self.websocket.emit('after_init')
+        self.emit('before_init')
+        self.emit('init', data)
+        self.emit('after_init')
 
     def emit_update(self, label=None):
         """
@@ -136,16 +116,16 @@ class ProgressBar(object):
         if label:
             data.update({'label': label})
 
-        self.websocket.emit('before_update')
-        self.websocket.emit('update', data)
-        self.websocket.emit('after_update')
+        self.emit('before_update')
+        self.emit('update', data)
+        self.emit('after_update')
 
     def emit_done(self):
         """
             Emit ``done`` event when progress bar's progression :meth:`~tornado_websockets.modules.progress_bar.ProgressBar.is_done`.
         """
 
-        self.websocket.emit('done')
+        self.emit('done')
 
     @property
     def value(self):

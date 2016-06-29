@@ -20,16 +20,21 @@ Provide an interface to easily handle a progress bar on both server and client s
         import threading
         from tornado_websockets.modules.progress_bar import ProgressBar
 
-        ws_pb = ProgressBar('/my_progress_bar', min=0, max=100)
+        ws = WebSocket('my_app')
+        progressbar = ProgressBar(ws, min=0, max=100)
 
-        # Client emitted ``start_progression`` event
-        @ws_pb.on
-        def start_progression():
+        # Client emitted `my_event` event
+        @ws.on
+        def my_event(socket, data): pass
+
+        # Client emitted ``module_progressbar_start_progression`` event
+        @progressbar.on
+        def start_progression(socket, data):
 
             def my_func():
-                for value in range(ws_pb.min, ws_pb.max):
+                for value in range(progressbar.min, progressbar.max):
                     time.sleep(.1)  # Emulate a slow task :^)
-                    ws_pb.tick(label="[%d/%d] Task #%d is done" % (ws_pb.value, ws_pb.max, value))
+                    progressbar.tick(label="[%d/%d] Task #%d is done" % (progressbar.value, progressbar.max, value))
 
             threading.Thread(None, my_func, None).start()
 
