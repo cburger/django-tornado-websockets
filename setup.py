@@ -1,6 +1,5 @@
 import os
 from setuptools import find_packages, setup
-import tornado_websockets
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     README = readme.read()
@@ -9,7 +8,6 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-tornado-websockets',
-    version=tornado_websockets.__version__,
     description="Simple way to use WebSockets for Django with Tornado",
     long_description=README,
     author='Hugo ALLIAUME',
@@ -19,7 +17,10 @@ setup(
         'tornado>=4.3',
         'six>=1.10',
     ],
-    packages=find_packages(exclude=['node_modules', 'bower_components', '.idea']),
+    package_dir={'': 'tornado_websockets'},
+    packages=find_packages('tornado_websockets'),
+    setup_requires=['setuptools-git-version'],
+    version_format='{tag}',
     include_package_data=True,
     license='GPLv3 License',
     classifiers=[
